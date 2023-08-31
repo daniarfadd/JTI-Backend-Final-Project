@@ -13,10 +13,13 @@ HOW TO RUN THIS PROJECT ON YOUR LOCAL:
 4. buat file ".env" yang berisi 2 variabel "APP_PORT" dan "SESS_SECRET". 
     - APP_PORT bebas mau pake berapa, contohnya bisa pake port 5000.
     - SESS_SECRET isinya bebas apa aja, contoh "nasflasgoij3223ukkjlfbjadbfbn-34023941h4jcn"
-    Tahap ke-4 ini opsional kalau gamau pake bisa diubah codingan di file "index.js"
-5. buat database secara manual melalu phpmyadmin, namanya database nya "jti_final". Kalau mau pake nama DB yang lain ubah codingan di config-> Database.js
+    - Tahap ke-4 ini opsional kalau gamau pake bisa diubah codingan di file "index.js"
+5. buat database secara manual melalu phpmyadmin, namanya database nya "jti_final". 
+    - Kalau mau pake nama DB yang lain ubah codingan di config-> Database.js
 6. codingan pada "index.js" line 45 ( // store.sync(); ),  di un-comment
 7. JANGAN LUPA NYALAKAN XAMPP, MySQL dan Apache nya harus nyala
 8. Pada terminal ketik "nodemon index"
 9. Jika sudah berhasil maka untuk seterusnya codingan pada "index.js" line 45 di-comment lagi
 10. Selamat mencoba!
+
+Untuk melihat ENDPOINT bisa dibuka pada Folder Routes, Disitu setiap tabel sudah ada ENDPOINT nya
