@@ -14,6 +14,14 @@ const Report = db.define('report',{
         }
     },
     reportDate:{
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.fn('now'),
+        allowNull: false,
+        validate:{
+            notEmpty: true
+        }
+    },
+    reportInfo:{
         type: DataTypes.STRING,
         allowNull: false,
         validate:{
