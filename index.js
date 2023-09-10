@@ -38,6 +38,7 @@ app.use(
   cors({
     credentials: true,
     origin: "http://localhost:3000",
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
   })
 );
 app.use(express.json());
@@ -46,7 +47,7 @@ app.use(MonitorRoute);
 app.use(AuthRoute);
 app.use(ReportRoute);
 
-// store.sync();
+store.sync();
 
 app.listen(process.env.APP_PORT, () => {
   console.log("Server up and running nih bos......");
