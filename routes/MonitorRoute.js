@@ -4,17 +4,32 @@ import {
   getMonitorById,
   updateParam,
   createParam,
+  addDevice,
+  updateDeviceConfig,
+  getMonitoringDeviceList,
+  deleteDevice,
+  getMonitorConfigurationById,
 } from "../controllers/Monitoring.js";
 import { verifyUser } from "../middleware/AuthUser.js";
 
 const router = express.Router();
 
-router.get("/monitor", getMonitoring);
+router.get("/monitor", verifyUser, getMonitoring);
 
 router.get("/monitor/:id", verifyUser, getMonitorById);
 
-router.post("/monitor", verifyUser, createParam);
+router.get("/deviceList", verifyUser, getMonitoringDeviceList);
 
-router.patch("/monitor/:id", verifyUser, updateParam);
+router.post("/monitor", verifyUser, addDevice);
+
+router.patch("/monitor/:id", verifyUser, updateDeviceConfig);
+
+router.delete("/monitor", verifyUser, deleteDevice);
+
+router.get(
+  "/monitorConfiguration/:uuid",
+  verifyUser,
+  getMonitorConfigurationById
+);
 
 export default router;
