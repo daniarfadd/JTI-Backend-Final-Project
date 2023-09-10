@@ -75,13 +75,24 @@ export const getMonitorConfigurationById = async (req, res) => {
   try {
     const monitor = await Monitoring.findOne({
       where: {
-        uuid: req.params.id,
+        uuid: req.params.uuid,
       },
     });
     if (!monitor) return res.status(404).json({ msg: "Data not found" });
     let response;
     response = await Monitoring.findOne({
-      attributes: ["uuid", "param1", "param2", "param3"],
+      attributes: [
+        "uuid",
+        "deviceName",
+        "description",
+        "deviceSerialNumber",
+        "updateInterval",
+        "status",
+        "waterLimit",
+        "waterUsageTimer",
+        "valveStatus",
+        "waterTolerance",
+      ],
       where: {
         [Op.and]: [{ id: monitor.id }, { userId: req.userId }],
       },
@@ -152,8 +163,10 @@ export const updateDeviceConfig = async (req, res) => {
       description,
       deviceSerialNumber,
       updateInterval,
+      status,
       waterLimit,
       waterUsageTimer,
+      valveStatus,
       waterTolerance,
     } = req.body;
     if (req.userId !== monitor.userId)
@@ -164,8 +177,10 @@ export const updateDeviceConfig = async (req, res) => {
         description: description,
         deviceSerialNumber: deviceSerialNumber,
         updateInterval: updateInterval,
+        status: status,
         waterLimit: waterLimit,
         waterUsageTimer: waterUsageTimer,
+        valveStatus: valveStatus,
         waterTolerance: waterTolerance,
       },
       {
@@ -200,6 +215,7 @@ export const deleteDevice = async (req, res) => {
   }
 };
 
+// ----------- DEPRECATED / DON'T USE -------------
 // DEPRECATED -- Update parameter value
 export const updateParam = async (req, res) => {
   try {
