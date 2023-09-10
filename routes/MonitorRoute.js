@@ -6,6 +6,8 @@ import {
   createParam,
   addDevice,
   updateDeviceConfig,
+  getMonitoringDeviceList,
+  deleteDevice,
 } from "../controllers/Monitoring.js";
 import { verifyUser } from "../middleware/AuthUser.js";
 
@@ -15,8 +17,12 @@ router.get("/monitor", verifyUser, getMonitoring);
 
 router.get("/monitor/:id", verifyUser, getMonitorById);
 
+router.get("/deviceList", verifyUser, getMonitoringDeviceList);
+
 router.post("/monitor", verifyUser, addDevice);
 
 router.patch("/monitor/:id", verifyUser, updateDeviceConfig);
+
+router.delete("/monitor", verifyUser, deleteDevice);
 
 export default router;

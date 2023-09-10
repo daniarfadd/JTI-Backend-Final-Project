@@ -22,6 +22,27 @@ export const getMonitoring = async (req, res) => {
   }
 };
 
+// Get all devices owned by logged in user
+export const getMonitoringDeviceList = async (req, res) => {
+  try {
+    let response;
+    response = await Monitoring.findAll({
+      attributes: ["uuid", "deviceName", "status", "valveStatus"],
+      where: {
+        userId: req.userId,
+      },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 // Get device by Device ID
 export const getMonitorById = async (req, res) => {
   try {
@@ -49,6 +70,33 @@ export const getMonitorById = async (req, res) => {
   }
 };
 
+// Get device by Device ID
+export const getMonitorConfigurationById = async (req, res) => {
+  try {
+    const monitor = await Monitoring.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+    if (!monitor) return res.status(404).json({ msg: "Data not found" });
+    let response;
+    response = await Monitoring.findOne({
+      attributes: ["uuid", "param1", "param2", "param3"],
+      where: {
+        [Op.and]: [{ id: monitor.id }, { userId: req.userId }],
+      },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 // Add new device
 export const addDevice = async (req, res) => {
   const {
@@ -57,19 +105,10 @@ export const addDevice = async (req, res) => {
     deviceSerialNumber,
     updateInterval,
     status,
-    waterUsage,
     waterLimit,
     waterUsageTimer,
     valveStatus,
     waterTolerance,
-    totalDissolvedSolids,
-    turbidity,
-    temperature,
-    color,
-    electricalConductivity,
-    ph,
-    totalColiforms,
-    metal,
   } = req.body;
   try {
     await Monitoring.create({
@@ -78,19 +117,19 @@ export const addDevice = async (req, res) => {
       deviceSerialNumber: deviceSerialNumber,
       updateInterval: updateInterval,
       status: status,
-      waterUsage: waterUsage,
+      waterUsage: 0,
       waterLimit: waterLimit,
       waterUsageTimer: waterUsageTimer,
       valveStatus: valveStatus,
       waterTolerance: waterTolerance,
-      totalDissolvedSolids: totalDissolvedSolids,
-      turbidity: turbidity,
-      temperature: temperature,
-      color: color,
-      electricalConductivity: electricalConductivity,
-      ph: ph,
-      totalColiforms: totalColiforms,
-      metal: metal,
+      totalDissolvedSolids: 0.0,
+      turbidity: 0.0,
+      temperature: 0.0,
+      color: 0.0,
+      electricalConductivity: 0.0,
+      ph: 0.0,
+      totalColiforms: 0.0,
+      metal: 0.0,
       userId: req.userId,
     });
     res.status(201).json({ msg: "New device added successfully" });
@@ -138,6 +177,24 @@ export const updateDeviceConfig = async (req, res) => {
     res
       .status(200)
       .json({ msg: "Device configuration has been successfully updated" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+// Delete registered device
+export const deleteDevice = async (req, res) => {
+  const { uuid, deviceName } = req.body;
+  try {
+    let response;
+    response = await Monitoring.destroy({
+      where: {
+        uuid: uuid,
+      },
+    });
+    res
+      .status(200)
+      .json({ msg: "Device " + deviceName + " successfully deleted" });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
