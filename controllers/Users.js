@@ -16,7 +16,7 @@ export const getUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const response = await User.findOne({
-      attributes: ["uuid", "name", "username", "email"],
+      attributes: ["uuid", "name", "username", "email", "password"],
       where: {
         uuid: req.params.id,
       },
@@ -46,5 +46,37 @@ export const createUser = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ msg: error.message });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    const { name, email, password, username } = req.body;
+    const hashPassword = await argon2.hash(password);
+    if (req.session.userId !== user.uuid)
+      return res.status(403).json({ msg: "Access denied" });
+
+    await User.update(
+      {
+        name: name,
+        email: email,
+        password: hashPassword,
+        username: username,
+      },
+      {
+        where: {
+          uuid: req.session.userId,
+        },
+      }
+    );
+    res.status(200).json({ msg: "User successfully updated" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
   }
 };
