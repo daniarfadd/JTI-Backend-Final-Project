@@ -54,7 +54,6 @@ export const getMonitorById = async (req, res) => {
     if (!monitor) return res.status(404).json({ msg: "Data tidak ditemukan" });
     let response;
     response = await Monitoring.findOne({
-      attributes: ["uuid", "param1", "param2", "param3"],
       where: {
         [Op.and]: [{ id: monitor.id }, { userId: req.userId }],
       },
