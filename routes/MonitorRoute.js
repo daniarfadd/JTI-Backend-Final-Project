@@ -9,6 +9,7 @@ import {
   getMonitoringDeviceList,
   deleteDevice,
   getMonitorConfigurationById,
+  updateSensorData,
 } from "../controllers/Monitoring.js";
 import { verifyUser } from "../middleware/AuthUser.js";
 
@@ -31,5 +32,7 @@ router.get(
   verifyUser,
   getMonitorConfigurationById
 );
+
+router.patch("/sensor/:id", verifyUser, updateSensorData);
 
 export default router;

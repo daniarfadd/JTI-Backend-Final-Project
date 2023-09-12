@@ -214,6 +214,51 @@ export const deleteDevice = async (req, res) => {
   }
 };
 
+export const updateSensorData = async (req, res) => {
+  try {
+    const monitor = await Monitoring.findOne({
+      where: {
+        uuid: req.params.id,
+      },
+    });
+    if (!monitor) return res.status(404).json({ msg: "Data tidak ditemukan" });
+    const {
+      waterTolerance,
+      totalDissolvedSolids,
+      turbidity,
+      temperature,
+      color,
+      electricalConductivity,
+      ph,
+      totalColiforms,
+      metal,
+    } = req.body;
+    if (req.userId !== monitor.userId)
+      return res.status(403).json({ msg: "Akses terlarang" });
+    await Monitoring.update(
+      {
+        waterTolerance: waterTolerance,
+        totalDissolvedSolids: totalDissolvedSolids,
+        turbidity: turbidity,
+        temperature: temperature,
+        color: color,
+        electricalConductivity: electricalConductivity,
+        ph: ph,
+        totalColiforms: totalColiforms,
+        metal: metal,
+      },
+      {
+        where: {
+          [Op.and]: [{ id: monitor.id }, { userId: req.userId }],
+        },
+      }
+    );
+    res.status(200).json({ msg: "Parameter Berhasil diupdate" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 // ----------- DEPRECATED / DON'T USE -------------
 // DEPRECATED -- Update parameter value
 export const updateParam = async (req, res) => {
