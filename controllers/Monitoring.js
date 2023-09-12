@@ -237,7 +237,6 @@ export const updateSensorData = async (req, res) => {
       return res.status(403).json({ msg: "Akses terlarang" });
     await Monitoring.update(
       {
-        waterTolerance: waterTolerance,
         totalDissolvedSolids: totalDissolvedSolids,
         turbidity: turbidity,
         temperature: temperature,
